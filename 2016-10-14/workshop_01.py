@@ -1,5 +1,7 @@
 from pyplasm import*
 	
+
+#start function ------------------------------------------------------------
 def plane_frame(distanceList, interstoryHeight, widthPill, widthBeam):
 	"""
 	@param distanceList: list of distance between the pillars. 
@@ -10,49 +12,65 @@ def plane_frame(distanceList, interstoryHeight, widthPill, widthBeam):
 	
 	"""
 	
-	numBeam = len(interstoryHeight)
-	pillarsList = [widthPill]
+	numBeam = len(interstoryHeight) #number of beam
+	pillarsList = [widthPill] #create a new list of pillars and distance between them. First element is the first pillar.
 
+	#creation of pillars' list
 	for item in distanceList:
 		pillarsList.append(item)
 		pillarsList.append(widthPill)
 
-	beamList = []
 
+	beamList = [] #create an empty beams' list
+
+	#inserting element inside beams' list
 	for item in interstoryHeight:
 		beamList.append(item)
 		beamList.append(widthBeam)
 
+	#number of pillars it's like number of distance - 1
 	numPill = len(distanceList)+1
-
-	print(beamList)
 	
-
+	#create a list with the pillars' heights that are negative instead of interstory height
 	hPillList = [(-i) for i in beamList]
-	print(hPillList)
 
+	#x axis of pillars
 	xPillar = QUOTE(pillarsList)
+	#y axis of pillars
 	yPillar = QUOTE([widthPill, -4])
+	#2D pillars
 	xyPillar = PROD([yPillar, xPillar])
+	#3D pillars
 	pillar = PROD([xyPillar, QUOTE(hPillList)])
 
-	
+	#need sum of distance between pillars to calculate lenght of beam
 	sumdistancepill = sum([abs(i) for i in distanceList])
 
-	
-	xBeam = QUOTE([(widthPill*numPill)+sumdistancepill]) #lunghezza della trave
-	yBeam = QUOTE([widthBeam]) #spessore della trave
+	#x axis of beam
+	xBeam = QUOTE([(widthPill*numPill)+sumdistancepill])
+	#y axis of beam
+	yBeam = QUOTE([widthBeam])
+	#2D beam
 	xyBeam = PROD([yBeam, xBeam])
-	beam = PROD([xyBeam, QUOTE(beamList)]) #altezza della trave
+	#3D beam
+	beam = PROD([xyBeam, QUOTE(beamList)]) 
 
+	#view method
 	VIEW(STRUCT([pillar, beam]))
 
 
-distanceList=[-2,-1]
-interstoryHeight = [-2, -5,-1]
+#end function---------------------------------------------------------------------
+
+
+#TEST
+distanceList=[-2,-1, -3]
+interstoryHeight = [-2, -5]
+
+#here, pillar's width has to be the same of bean's, but this can be changed
 widthPill = 0.5
 widthBeam = widthPill
 
+#call function
 plane_frame(distanceList, interstoryHeight, widthPill, widthBeam)
 
 
