@@ -63,12 +63,12 @@ def plane_frame(distanceList, interstoryHeight, widthPill, widthBeam):
 
 
 #TEST
-distanceList=[-2,-1, -3]
-interstoryHeight = [-2, -5]
+distanceList=[-1,-1,-1, -7]
+interstoryHeight = [-2,-2,-2]
 
 #here, pillar's width has to be the same of bean's, but this can be changed
-widthPill = 0.5
-widthBeam = widthPill
+widthPill = .1
+widthBeam = .1
 
 #call function
 plane_frame(distanceList, interstoryHeight, widthPill, widthBeam)
