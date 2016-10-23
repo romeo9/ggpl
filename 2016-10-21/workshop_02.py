@@ -2,41 +2,44 @@ from pyplasm import*
 import csv
 from ast import literal_eval as make_number
 
+
+
+#start function ------------------------------------------------------------
 def ggpl_bone_structure(file_name):
+	"""
+	ggpl_bone_structure takes in input the name of file .csv from what it had to take datas to
+	create single frame structure. 
+	@param file_name: name of csv file 
+	"""
 
 	file = open(file_name, 'rb')
 	reader = csv.reader(file, delimiter = ';')
-
-
 
 	inputList = list(reader)
 
 	distanceRow = []
 	frameRow = []
 	
-	distanceRow.append(inputList[::2])
-	frameRow.append(inputList[1::2])
-
-	
+	distanceRow.append(inputList[::2]) #list of distance between frames. distanceRow takes equal row of file
+	frameRow.append(inputList[1::2])	#Odds row of file. frameRow is a list of value to pass at the plane_frame function
 	frameList = frameRow
-
-	frameSolid = []
+	
+	frameSolid = [] #list of the hpc frame values
 
 
 	for item in frameList:
 		temp=[]
 		for j in item:
-			distanceList = [float(i) for i in j[0].split(',')]
+			distanceList = [float(i) for i in j[0].split(',')]		#convert list string to list of float
 			interstoryHeight = [float(i) for i in j[1].split(',')]
 			widthPill = float(j[2])
 			widthBeam = float(j[3])
-			#print(distanceList)
-		#print(isinstance(widthBeam, basestring))
-			newFrame = plane_frame(distanceList, interstoryHeight, widthPill, widthBeam)
+			
+			newFrame = plane_frame(distanceList, interstoryHeight, widthPill, widthBeam) #create the single frame
 			frameSolid.append(newFrame)
 	
 	
-	l=[]
+	output=[]
 	xdist = 0
 	ydist = 0 
 	zdist = 0
@@ -47,20 +50,30 @@ def ggpl_bone_structure(file_name):
 			xdist = xdist + float(d[0][0])
 			ydist = ydist + float(d[0][1])
 			zdist = zdist + float(d[0][2])
-			frameElement = STRUCT([T(1)(xdist), T(2)(ydist), T(3)(zdist), i])
-			l.append(frameElement)
+			frameElement = STRUCT([T(1)(xdist), T(2)(ydist), T(3)(zdist), i]) #translation of single frame according to csv file
+			output.append(frameElement)
 				
-
-	print(l)
-
-	beams=(generate_beams(distanceRow, widthBeam, interstoryHeight))
-
-	l.extend(beams)
+	#generate beams			
+	beams=(generate_beams(distanceRow, widthBeam, interstoryHeight, distanceList))
+	#adding beams to list
+	output.extend(beams)
+	#display all structure
+	VIEW(STRUCT(output))	
 	
-	
-	VIEW(STRUCT(l))	
-	
-def generate_beams(distanceRow, widthBeam, interstoryHeight):
+#end function ------------------------------------------------------------	
+
+
+
+#start function ------------------------------------------------------------
+def generate_beams(distanceRow, widthBeam, interstoryHeight, distanceList):
+	"""
+	generate_beams takes in input some same values of the function plane_frame, in order to generate some beams
+	that satisfy the complete final structure.  
+	@param distanceRow: list of distance between frames. distanceRow takes equal row of file
+	@param widthBeam: width beam, given by .csv file 
+	@param interstoryHeight: distance between different floor, given by .csv file
+	@param distanceList: list of distance between pillars of a single frame, given by .csv file
+	"""
 	
 	distance=[]
 	distanceRow=distanceRow[0]
@@ -82,7 +95,14 @@ def generate_beams(distanceRow, widthBeam, interstoryHeight):
 
 	xBeam = QUOTE(xBeam)
 
-	yBeam = QUOTE([widthBeam])
+	beamDistance=[]
+	for i in distanceList:
+		beamDistance.append(widthBeam)
+		beamDistance.append(i)
+	beamDistance.append(widthBeam)
+	
+	yBeam = QUOTE(beamDistance)
+
 	xyBeam = INSR(PROD)([xBeam, yBeam])
 
 
@@ -91,15 +111,14 @@ def generate_beams(distanceRow, widthBeam, interstoryHeight):
 		hBeam.append(i)
 		hBeam.append(widthBeam)
 
-	#print(hBeam)
 
 	beamList=[]
 	temp = INSR(PROD)([xyBeam, QUOTE(hBeam)])
 	beamList.append(temp)
 
-	#VIEW(STRUCT(beamList))
 	return beamList
-	
+
+#end function ------------------------------------------------------------	
 
 
 	
