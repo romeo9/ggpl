@@ -55,11 +55,13 @@ def ggpl_bone_structure(file_name):
 				
 	#generate beams			
 	beams=(generate_beams(distanceRow, widthBeam, interstoryHeight, distanceList))
+
 	#adding beams to list
 	output.extend(beams)
+	
 	#display all structure
 	VIEW(STRUCT(output))	
-	
+
 #end function ------------------------------------------------------------	
 
 
