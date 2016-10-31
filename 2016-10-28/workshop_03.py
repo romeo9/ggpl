@@ -12,8 +12,8 @@ def create_straight_stairs(width, tread, riser, nStep):
 	"""
 	
 	xStep = MKPOL([[[tread, 0],[tread, riser*2], [tread*2, riser*2], [tread*2, riser]], [[1,2,3,4]], None])
-
 	step = PROD([QUOTE([width]), xStep])
+
 
 	firstStep = CUBOID([width,tread,riser])
 
@@ -44,19 +44,18 @@ def ggpl_straight_stairs(dx, dy, dz):
 	yStep = 1	#dimension of single step
 	xStep = dx 	#dimension of single step, if you want to make this param editable, you can make xStep=dx
 	
-	box = SKEL_1(CUBOID([dx,dy,dz]))
-
 	nStep = int(dy/yStep)
 	zStep = (float(dz)/float(nStep))
 
 
 	stairs = create_straight_stairs(xStep, yStep, zStep, nStep)
 	
+	box = SKEL_1(BOX([1,2,3])(stairs))
 
 	VIEW(STRUCT([stairs, box]))
 
 #---------end function--------------------------------------------------
 
 
-ggpl_straight_stairs(2,3,5)
+ggpl_straight_stairs(5,16,20)
 
