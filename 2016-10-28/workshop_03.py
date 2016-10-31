@@ -3,31 +3,30 @@ import math
 
 
 #---------start function--------------------------------------------------
-def create_straight_stairs(dx, dy, dz, nStep):
+def create_straight_stairs(width, tread, riser, nStep):
 	"""
 	function that creates a stairs according to given parameters.
-	@param dx: horizontal length of single step
-	@param dy: distance between single step
-	@param dz: distance of height of single step
+	@param width: horizontal length of single step
+	@param tread: distance between single step
+	@param riser: distance of height of single step
 	"""
 	
-	xStep = MKPOL([[[0,0],[dy,dz/2],[dy,dz],[0,dz],[0,0]],[[1,2,3,4,5]], 1]) #create single step
-	step = PROD([QUOTE([dx]), xStep])
+	xStep = MKPOL([[[tread, 0],[tread, riser*2], [tread*2, riser*2], [tread*2, riser]], [[1,2,3,4]], None])
 
-	xFirstStep = MKPOL([[[0,0],[dy,0],[dy,dz/2],[0,dz/2],[0,0]],[[1,2,3,4,5]], 1]) #create first step
-	firstStep = PROD([QUOTE([dx]),xFirstStep])
+	step = PROD([QUOTE([width]), xStep])
 
+	firstStep = CUBOID([width,tread,riser])
 
 	stairsList=[]
 	stairsList.append(firstStep)
 
 	tempy = 0
 	tempz = 0
-	for i in range(nStep):
-		trasl = STRUCT([T(2)(tempy),T(3)(tempz/2), step]) #every step there is a traslation
+	for i in range(nStep-1):
+		trasl = STRUCT([T(2)(tempy),T(3)(tempz), step]) #every step there is a traslation
 		stairsList.append(trasl)
-		tempy = dy+tempy
-		tempz = dz+tempz
+		tempy = tread+tempy
+		tempz = riser+tempz
 
 	return STRUCT(stairsList)
 #---------end function--------------------------------------------------
@@ -43,20 +42,21 @@ def ggpl_straight_stairs(dx, dy, dz):
 	dz=dz/2
 
 	yStep = 1	#dimension of single step
-	xStep = 5 	#dimension of single step, if you want to make this param editable, you can make xStep=dx
+	xStep = dx 	#dimension of single step, if you want to make this param editable, you can make xStep=dx
 	
 	box = SKEL_1(CUBOID([dx,dy,dz]))
 
 	nStep = int(dy/yStep)
-	zStep = (float(dz)/float(nStep+1)*2)
+	zStep = (float(dz)/float(nStep))
 
 
 	stairs = create_straight_stairs(xStep, yStep, zStep, nStep)
+	
 
 	VIEW(STRUCT([stairs, box]))
 
 #---------end function--------------------------------------------------
 
 
-ggpl_straight_stairs(5,8,20)
+ggpl_straight_stairs(2,3,5)
 
