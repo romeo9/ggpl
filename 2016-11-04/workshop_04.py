@@ -56,7 +56,6 @@ def ggpl_roof_builder(pol):
 	#create beam structure of roof
 	roofStructure = COLOR(Color4f([132/255., 54/255., 9/255.,1]))(OFFSET([.1,.1,.1])(SKEL_1(pol)))
 
-
 	return STRUCT([cells3d, roofStructure])
 #end function ------------------------------------------------------------
 
@@ -141,27 +140,18 @@ def baseCell(verts):
 
 #Nedeed values for executing function
 
-#paramether dimensions of roof on the x,y,z axis
-dx = 5 
-dy = 3
-dz = 2
+#Hip roof------------------------------
+verts = [[0,0,0],[5,0,0],[5,3,0],[4,1.5,2],[1,1.5,2],[0,3,0]]
+cells = [[1,2,4,5],[2,4,3],[1,5,6],[3,4,5,6],[1,2,3,6]]
 
-vert1 = [0,0,0]
-vert2 = [dx,0,0]
-vert3 = [dx,dy,0]
-vert4 = [dx-1,dy/2.,dz]
-vert5 = [dx-(dx-1),dy/2.,dz]
-vert6 = [0,dy,0]
+#Hip and valley roof------------------------
+#verts = [[0,0,0],[6,0,0],[6,12,0],[3,12,0],[3,3,0],[0,3,0],[1.5,1.5,3],[4.5,1.5,3],[4.5,10.5,3]]
+#cells = [[1,7,6],[2,8,7,1],[2,3,9,8],[4,3,9],[4,9,8,5],[5,8,7,6],[6,5,2,1],[5,4,3,2]]
 
-verts = [vert1,vert2,vert3,vert4,vert5,vert6]
+#Gable roof---------------------------
+#verts=[[0,0,0],[0,5,0],[8,5,0],[8,0,0],[4,0,3],[4,5,3]]
+#cells=[[3,4,5,6],[1,2,6,5],[1,4,3,2]]
 
-cell1 = [1,2,4,5]
-cell2 = [2,4,3]
-cell3 = [1,5,6]
-cell4 = [3,4,5,6]
-cell5 = [1,2,3,6]
-
-cells = [cell1,cell2,cell3,cell4,cell5]
 
 pol = MKPOL([verts,cells,1])
 
