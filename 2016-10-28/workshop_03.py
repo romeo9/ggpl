@@ -9,12 +9,15 @@ def create_straight_stairs(width, tread, riser, nStep):
 	@param width: horizontal length of single step
 	@param tread: distance between single step
 	@param riser: distance of height of single step
+	@param nStep: number of steps in a stairs
 	"""
-	
+
+
+
 	xStep = MKPOL([[[tread, 0],[tread, riser*2], [tread*2, riser*2], [tread*2, riser]], [[1,2,3,4]], None])
-	step = PROD([QUOTE([width]), xStep])
+	step =  PROD([QUOTE([width]), xStep])
 
-
+	
 	firstStep = CUBOID([width,tread,riser])
 
 	stairsList=[]
@@ -47,15 +50,18 @@ def ggpl_straight_stairs(dx, dy, dz):
 	nStep = int(dy/yStep)
 	zStep = (float(dz)/float(nStep))
 
+	wall = CUBOID([0.1,dy,dz]) #create walls close to stairs
 
-	stairs = create_straight_stairs(xStep, yStep, zStep, nStep)
+
+	stairs = STRUCT([wall,T(1)(0.1),create_straight_stairs(xStep, yStep, zStep, nStep), T(1)(xStep), wall])
 	
 	box = SKEL_1(BOX([1,2,3])(stairs))
+
 
 	VIEW(STRUCT([stairs, box]))
 
 #---------end function--------------------------------------------------
 
 
-ggpl_straight_stairs(5,16,20)
+ggpl_straight_stairs(2,3,7)
 
