@@ -9,11 +9,14 @@ def create_desk(dx,dy,dz):
 	desk = STRUCT([T(3)(dz),CUBOID([dx,dy,.1])])
 	leg = STRUCT([T([1,2])([r*2,r*2]),CYLINDER([r,dz])(30)])
 	xlegs = STRUCT([leg, T(1)(dx-(r*4)),leg])
-	ylegs = STRUCT([xlegs, T(2)(dy-(r*4)), xlegs])
+	legs = STRUCT([xlegs, T(2)(dy-(r*4)), xlegs])
 
-	desk = STRUCT([ylegs,desk])
+	
 	box = SKEL_1(BOX([1,2,3])(desk))
 
+	desk = (COLOR(Color4f([220/255., 165/255., 116/255.,1])))(desk)
+	legs = (COLOR(Color4f([96/255., 96/255., 96/255.,1])))(legs)
+	desk = STRUCT([legs,desk])
 	return desk
 
 
@@ -21,7 +24,8 @@ def create_chair(dx,dy,dz):
 	r = .05
 	thickness = r/2.
 
-	s = SPHERE(r)([100,100])
+	s = SPHERE(r)([30,30])
+	s = JOIN(SKEL_1(s))
 
 	seat = STRUCT([T([1,2,3])([r,r,(dz/2.)-r]),CUBOID([dx-(r*2),dy-(r*2),thickness])])
 	back = STRUCT([T([1,2,3])([r,r*3,((dz/2.)+(dz/4.))]), CUBOID([dx-(r*2),thickness,(dz/4.)]) ])
@@ -47,24 +51,6 @@ def create_chair(dx,dy,dz):
 	return chair
 	
 
-
-
-def create_blackboard(dx,dy,dz):
-	thickness = 0.1
-
-	c = CUBOID([dx,dy,dz])
-	board = STRUCT([T([1,2])([thickness/2.,thickness/2.]),CUBOID([dx-thickness,dy-thickness,dz])])
-	board = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(board)
-	frame = DIFFERENCE([c,board])
-
-	
-	text = PROD([S([1,2])([thickness,thickness])(OFFSET([thickness,thickness])(TEXT("pyplasm"))), Q(thickness/2.)])
-	text = STRUCT([T([1,2])([0.2,1]),text])
-	blackboard = STRUCT([board,frame,text])
-	
-	return blackboard
-
-
 def create_closet(dx,dy,dz):
 	thickness = 0.05
 	c = CUBOID([dx,dy,dz])
@@ -75,19 +61,70 @@ def create_closet(dx,dy,dz):
 	door1 = (COLOR(Color4f([80/255., 25/255., 0/255.,1])))(door1)
 	door2 = (COLOR(Color4f([80/255., 25/255., 0/255.,1])))(door2)
 
-	knob = SPHERE(thickness)([50,50])
+	knob = SPHERE(thickness)([30,30])
+	knob = JOIN(SKEL_1(knob))
 	knobs = STRUCT([T([1,2,3])([(dx/2.)-(thickness*2),dy+thickness,dz/2.]),knob,T(1)(thickness*4),knob])
 
 	knobs = (COLOR(Color4f([80/255., 25/255., 0/255.,1])))(knobs)
 
 	closet = STRUCT([c, door1,door2,knobs])
 
-	VIEW(closet)
+	box = SKEL_1(BOX([1,2,3])(closet))
 
-create_closet(1,1,3.5)
+	return closet
+
+def create_prof_desk(dx,dy,dz):
+	r = dy/25.
+	desk = STRUCT([T(3)(dz),CUBOID([dx,dy,.1])])
+	leg = STRUCT([T([1,2])([r*2,r*2]),CYLINDER([r,dz])(30)])
+	xlegs = STRUCT([leg, T(1)(dx-(r*4)),leg])
+	legs = STRUCT([xlegs, T(2)(dy-(r*4)), xlegs])
+
+	supportDesk = STRUCT([T([1,2,3])([r*1.5,r*1.5,dz-(r*2)]),CUBOID([dx-(r*3),dy-(r*3),r*2])])
+	diffSupport = STRUCT([T([1,2,3])([r*2.5,r*2.5,dz-(r*2)]),CUBOID([dx-(r*5),dy-(r*5),r*2])])
+	supportDesk = DIFFERENCE([supportDesk,diffSupport])
+
+	drawer = STRUCT([T([1,2,3])([r*4,r*2,dz-(dz/4.)]),CUBOID([dx/3.,dy/2.,dz/4.])])
+	knob = STRUCT([T([1,2,3])([dx/4.,r,dz-(dz/6.)]),SPHERE(r)([30,30])])
+	knob = JOIN(SKEL_1(knob))
+
+	border1 = STRUCT([T([2,3])([dy-r,dz/3.]),CUBOID([dx,r,dz/2.])])
+	border2 = STRUCT([T(3)(dz/3.),CUBOID([r,dy,dz/2.])])
+	border3 = STRUCT([T([1,3])([dx-r,dz/3.]),CUBOID([r,dy,dz/2.])])
+
+	border1 = (COLOR(Color4f([225/255., 161/255., 106/255.,1])))(border1)
+	border2 = (COLOR(Color4f([225/255., 161/255., 106/255.,1])))(border2)
+	border3 = (COLOR(Color4f([225/255., 161/255., 106/255.,1])))(border3)
 
 
 
+	borders = STRUCT([border1,border2,border3])
+
+	supportDesk = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(supportDesk)
+	legs = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(legs)
+	knob = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(knob)
+	desk = (COLOR(Color4f([51/255., 255/255., 153/255.,1])))(desk)
+	drawer = (COLOR(Color4f([225/255., 161/255., 106/255.,1])))(drawer)
+
+	desk = STRUCT([legs,desk,supportDesk,drawer,knob,borders])
+
+	return desk
+
+#VIEW(create_prof_desk(2,1,1.5))
+#VIEW(create_closet(2,1,3))
+#VIEW(create_chair(1.2,1.2,2))
+#VIEW(create_desk(1,1,1))
+
+def ggpl_main():
+
+	desk = STRUCT([T([2])([3]),create_desk(1.5,1,1), T([1])([2]), create_desk(1.5,1,1),T(2)(2),create_desk(1.5,1,1)])
+	profDesk = STRUCT([T([1,2])([1.1,0.9]),create_prof_desk(2,1,1.5)])
+	chair1 = STRUCT([T(1)(2),create_chair(1,1,1.7)])
+	closet = STRUCT([T([1,2])([6,4]),R([1,2])(PI/2)(create_closet(2,1,3))])
+
+	VIEW(STRUCT([profDesk,chair1,desk,closet]))
+
+ggpl_main()
 
 
 
