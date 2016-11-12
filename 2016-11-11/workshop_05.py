@@ -1,15 +1,15 @@
 from pyplasm import*
 from larlib import*
 
-"""
-Function that create a desk for a classroom
-@param dx: dimension x of the desk
-@param dy: dimension y of the desk
-@param dz: dimension z of the desk
 
-"""
 def create_desk(dx,dy,dz):
+	"""
+	Function that create a desk for a classroom
+	@param dx: dimension x of the desk
+	@param dy: dimension y of the desk
+	@param dz: dimension z of the desk
 
+	"""
 	r = dy/20. #cylinder radius
 
 	desk = STRUCT([T(3)(dz),CUBOID([dx,dy,.1])])
@@ -17,23 +17,29 @@ def create_desk(dx,dy,dz):
 	xlegs = STRUCT([leg, T(1)(dx-(r*4)),leg])
 	legs = STRUCT([xlegs, T(2)(dy-(r*4)), xlegs])
 
+	supportDesk = STRUCT([T([1,2,3])([r*1.5,r*1.5,dz-(r*2)]),CUBOID([dx-(r*3),dy-(r*3),r*2])])
+	diffSupport = STRUCT([T([1,2,3])([r*2.5,r*2.5,dz-(r*2)]),CUBOID([dx-(r*5),dy-(r*5),r*2])])
+	supportDesk = DIFFERENCE([supportDesk,diffSupport])
+
 	
 	box = SKEL_1(BOX([1,2,3])(desk))
 
 	desk = (COLOR(Color4f([220/255., 165/255., 116/255.,1])))(desk)
-	legs = (COLOR(Color4f([96/255., 96/255., 96/255.,1])))(legs)
-	desk = STRUCT([legs,desk])
+	legs = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(legs)
+	supportDesk = (COLOR(Color4f([0/255., 0/255., 0/255.,1])))(supportDesk)
+	desk = STRUCT([legs,desk,supportDesk])
 	return desk
 
 
-"""
-Function that create a chair for a classroom
-@param dx: dimension x of the chair
-@param dy: dimension y of the chair
-@param dz: dimension z of the chair
 
-"""
 def create_chair(dx,dy,dz):
+	"""
+	Function that create a chair for a classroom
+	@param dx: dimension x of the chair
+	@param dy: dimension y of the chair
+	@param dz: dimension z of the chair
+
+	"""
 	r = .05
 	thickness = r/2.
 
@@ -64,14 +70,15 @@ def create_chair(dx,dy,dz):
 	return chair
 	
 
-"""
-Function that create a closet for a classroom
-@param dx: dimension x of the closet
-@param dy: dimension y of the closet
-@param dz: dimension z of the closet
 
-"""
 def create_closet(dx,dy,dz):
+	"""
+	Function that create a closet for a classroom
+	@param dx: dimension x of the closet
+	@param dy: dimension y of the closet
+	@param dz: dimension z of the closet
+
+	"""
 	thickness = 0.05
 	c = CUBOID([dx,dy,dz])
 	door1 = STRUCT([T([1,2,3])([thickness,dy,thickness]),CUBOID([(dx/2.)-(thickness*2),thickness,dz-(thickness*2)])])
@@ -94,15 +101,14 @@ def create_closet(dx,dy,dz):
 	return closet
 
 
-
-"""
-Function that create a desk for the professor for a classroom
-@param dx: dimension x of the desk
-@param dy: dimension y of the desk
-@param dz: dimension z of the desk
-
-"""
 def create_prof_desk(dx,dy,dz):
+	"""
+	Function that create a desk for the professor for a classroom
+	@param dx: dimension x of the desk
+	@param dy: dimension y of the desk
+	@param dz: dimension z of the desk
+
+	"""
 	r = dy/25.
 	desk = STRUCT([T(3)(dz),CUBOID([dx,dy,.1])])
 	leg = STRUCT([T([1,2])([r*2,r*2]),CYLINDER([r,dz])(30)])
@@ -139,21 +145,14 @@ def create_prof_desk(dx,dy,dz):
 
 	return desk
 
-#VIEW(create_prof_desk(2,1,1.5)) #profdesk01
-#VIEW(create_prof_desk(3,1,2)) #profdesk02
 
-#VIEW(create_closet(2,1,3)) #closet01
-#VIEW(create_closet(1,1,2)) #closet02
-
-#VIEW(create_chair(1.2,1.2,2)) #chair01
-#VIEW(create_chair(2,1,1)) #chair02
-
-#VIEW(create_desk(1,1,1)) #desk01
-#VIEW(create_desk(2,1,1)) #desk02
 
 def ggpl_main():
+	"""
+	Function that takes each forniture and create a classroom
+	"""
 
-	deskChair = STRUCT([T([2])([3]),create_desk(2,1,1),T([1,2])([1.2,1.2]),R([1,2])(PI)(create_chair(1,1,1.7))])
+	deskChair = STRUCT([T([2])([3]),create_desk(2,1,1),T([1,2])([1.3,1.4]),R([1,2])(PI)(create_chair(1,1,1.7))])
 
 	desk = STRUCT([deskChair, T(1)(3), deskChair])
 	desks = STRUCT([desk, T([2])([2]),desk, T([2])([2]),desk])
@@ -163,10 +162,21 @@ def ggpl_main():
 
 	room = SKEL_1(CUBOID([7,10,3]))
 
-	VIEW(STRUCT([profDesk,chair1,desks,closet,room]))
+	classroom = STRUCT([profDesk,chair1,desks,closet,room])
 
-ggpl_main()
+	return classroom
 
+VIEW(ggpl_main())
 
+#VIEW(create_prof_desk(2,1,1.5)) #profdesk01
+#VIEW(create_prof_desk(3,1,2)) #profdesk02
 
+#VIEW(create_closet(2,1,3)) #closet01
+#VIEW(create_closet(1,1,2)) #closet02
+
+#VIEW(create_chair(1.2,1.2,2)) #chair01
+#VIEW(create_chair(2,1,1)) #chair02
+
+#VIEW(create_desk(2,1,1)) #desk01
+#VIEW(create_desk(1,1,1)) #desk02
 
