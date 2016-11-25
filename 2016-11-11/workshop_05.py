@@ -166,7 +166,7 @@ def ggpl_main():
 
 	return classroom
 
-VIEW(ggpl_main())
+#VIEW(ggpl_main())
 
 #VIEW(create_prof_desk(2,1,1.5)) #profdesk01
 #VIEW(create_prof_desk(3,1,2)) #profdesk02
@@ -174,7 +174,7 @@ VIEW(ggpl_main())
 #VIEW(create_closet(2,1,3)) #closet01
 #VIEW(create_closet(1,1,2)) #closet02
 
-#VIEW(create_chair(1.2,1.2,2)) #chair01
+VIEW(create_chair(1.2,1.2,2)) #chair01
 #VIEW(create_chair(2,1,1)) #chair02
 
 #VIEW(create_desk(2,1,1)) #desk01
