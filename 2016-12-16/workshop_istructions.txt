@@ -1,0 +1,24 @@
+Progetto geometrico
+una funzione che funziona sempre qualunque sia la proiezione planimetrica dei muri di contorno
+poligono qualunque e fateci sopra il tetto.
+tutte le falde hanno la stessa inclinazione?
+Se le falde hanno la stessa inclinazione, le bisettrici interne (che non sono altro che le rette di intersezione di due falde contigue) appartengono a due a due al piano della falda relativa.
+se interseco le falde con un piano orizzontale otterrò ...
+
+funzioni di supporto elementari:
+- calcolo del fascio di piani passanti per una retta. il fascio è funzione di un parametro. L'angolo che il piano del fascio forma sul piano orizzontale.(?)
+- cercare i punti di intersezione di 3 piani consecutivi. I punti di inters danno alcuni vertici di una sorta di scheletro verticale, le linee di colmo.(?)
+
+SUGGERIMENTO:
+- creare un minimo caso di test con un pol qualunque. Molto semplice. Con almeno dentro un angolo concavo.
+- due funzioni:
+	1) funz fascio
+	2) visualizzare per valori fissati dell'angolo, per ogni spigolo, come questi piani vanno a mettersi. e guardarli
+	3) calcolo dell'intersezione di 3 piani.
+
+equaz di un piano qualunque: y = mx --> atan2(y,x)
+
+ax+by+cz+d=0
+(a,b,c,d)
+
+piani in posizioni generali: costruzione in posizioni semplici, poi li sposto. 
