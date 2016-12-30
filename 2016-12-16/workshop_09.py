@@ -1,7 +1,5 @@
 from pyplasm import*
 
-
-
 def segment_list(verts):
 	#each element of segmentList is a list with two points.
 	#output example [[p1,p2],[p2,p3],...]
@@ -75,9 +73,9 @@ def create_roof(verts, cells, alfa, directions):
 
 	points_landing = create_landing(directions,alfa) 
 	landing = MKPOL([points_landing,cells,1])
-	landing = TEXTURE("images/roof02.jpg")(landing)
+	landing = TEXTURE("images/texture02.jpg")(landing)
 	flaps = create_flaps(verts, directions)
-	flaps = TEXTURE("images/roof01.jpg")(flaps)
+	flaps = TEXTURE("images/texture01.jpg")(flaps)
 
 	VIEW(STRUCT([landing, flaps]))
 
