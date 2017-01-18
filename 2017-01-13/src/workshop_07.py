@@ -42,6 +42,7 @@ def ggpl_window(x,y,z,occurrency):
 
 		window = STRUCT([glass3d, win3d])
 		#VIEW(window)
+		return window
 	#end subfunction ------------------------------------------------------
 
 
@@ -91,6 +92,8 @@ def ggpl_door(x,y,z,occurrency):
 
 		door = STRUCT([handle,win3d,slot3d])
 		#VIEW(door)
+
+		return door
 	#end subfunction ------------------------------------------------------
 
 	return create_door
@@ -112,7 +115,7 @@ z = dz
 
 occurrency = [True,True,True,True,False,True,True,True,True,False,True,True,True,True,True]
 
-ggpl_window(x,y,z,occurrency)(dx,dy,dz)
+#ggpl_window(x,y,z,occurrency)(dx,dy,dz)
 
 
 #Input values door--------------------------------------------
@@ -123,6 +126,6 @@ y = [dz,(dy-3*dz)/5.,dz,((dy-3*dz)*4)/5.,dz]
 occurrency = [True,True,True,True,True,True,False,False,True,True,True,True,True,True,True]
 
 
-ggpl_door(x,y,z,occurrency)(dx,dy,dz)
+#ggpl_door(x,y,z,occurrency)(dx,dy,dz)
 	 
 

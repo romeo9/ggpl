@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg3430"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   width="847"
+   height="700"
+   viewBox="0 0 847 700"
+   sodipodi:docname="int_walls.svg">
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="int_walls"
+     style="display:inline">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 139.38944,256.70365 222.35935,0 0.47411,274.51186"
+       id="path3450"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.78820741px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 361.75641,164.24488 359.3706,15.860469"
+       id="path3452"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 361.39847,256.13027 254.78927,0.6705"
+       id="path3458"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.98515397px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 361.27178,164.26157 255.08085,-0.92367 -0.47237,-16.62616"
+       id="path3454"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.87955362px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 616.34512,256.23266 1.90195,311.9606"
+       id="path3456"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 616.85824,280.2682 211.20689,0"
+       id="path3460"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
