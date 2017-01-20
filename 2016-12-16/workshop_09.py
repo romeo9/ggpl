@@ -22,22 +22,22 @@ def create_landing(directions,alfa):
 	for i in directions:
 		new_point = []
 		if(i[1]==1): 
-			new_point.append(i[0][0]+math.cos(PI/4))
-			new_point.append(i[0][1]+math.sin(PI/4))
+			new_point.append(i[0][0]+30*math.cos(PI/4))
+			new_point.append(i[0][1]+30*math.sin(PI/4))
 			
 		if(i[1]==2): 
-			new_point.append(i[0][0]-math.cos(PI/4))
-			new_point.append(i[0][1]+math.sin(PI/4))
+			new_point.append(i[0][0]-30*math.cos(PI/4))
+			new_point.append(i[0][1]+30*math.sin(PI/4))
 			
 		if(i[1]==3): 
-			new_point.append(i[0][0]-math.cos(PI/4))
-			new_point.append(i[0][1]-math.sin(PI/4))
+			new_point.append(i[0][0]-30*math.cos(PI/4))
+			new_point.append(i[0][1]-30*math.sin(PI/4))
 			
 		if(i[1]==4): 
-			new_point.append(i[0][0]+math.cos(PI/4))
-			new_point.append(i[0][1]-math.sin(PI/4))
+			new_point.append(i[0][0]+30*math.cos(PI/4))
+			new_point.append(i[0][1]-30*math.sin(PI/4))
 			
-		new_point.append(i[0][2]+math.sin(alfa))
+		new_point.append(i[0][2]+30*math.sin(alfa))
 		plane_points.append(new_point)
 
 	points = []
@@ -78,7 +78,7 @@ def create_roof(verts, cells, alfa, directions):
 	flaps = TEXTURE("images/texture01.jpg")(flaps)
 
 	VIEW(STRUCT([landing, flaps]))
-
+	return STRUCT([landing, flaps])
 
 #TEST-----------------------------------------------------------------
 
@@ -88,5 +88,15 @@ cells = [[1,2,5,6],[2,3,4,5]]
 directions = [[[0,0,0],1],[[6,0,0],2],[[6,6,0],3],[[3,6,0],4],[[3,3,0],4],[[0,3,0],4]]
 
 alfa = PI/4
+
+
+#----------------------------------
+
+cells = [[1,2,3],[3,4,5,6,3],[6,7,8,9,3],[9,10,11,3],[3,11,12,1]]
+verts = [[4.1426775, 115.85808,0], [163.28571, 115.85808,0], [163.28571, 150.72321,0], [220.17113, 150.72321,0], [220.17113, 262.22619,0], [163.28571, 262.22619,0], [163.28571, 293.22024,0], [96.383926, 293.22024,0], [96.383926, 252.20982,0], [37.797618, 252.20982,0], [37.797618, 178.69345,0], [4.1577381, 178.69345,0], [4.1426775, 115.85808,0]]
+
+directions = [[[4.1426775, 115.85808,0], 1], [[163.28571, 115.85808,0], 2], [[163.28571, 150.72321,0], 2], [[220.17113, 150.72321,0], 2], [[220.17113, 262.22619,0], 3], [[163.28571, 262.22619,0], 3], [[163.28571, 293.22024,0], 3], [[96.383926, 293.22024,0], 4], [[96.383926, 252.20982,0], 4], [[37.797618, 252.20982,0], 4], [[37.797618, 178.69345,0], 4], [[4.1577381, 178.69345,0], 4]]
+
+
 
 create_roof(verts, cells, alfa, directions)

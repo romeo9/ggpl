@@ -1,9 +1,10 @@
 from pyplasm import*
 import csv
 
-hwall = 2.
+hwall = 3.
 scale = .05
 hwindow = hwall-(hwall/4.)
+dimborder = .4
 
 #start function ---------------------------------------------------------
 def readFile(filename):
@@ -44,7 +45,7 @@ def create_external_enclosure(filename):
 	#windows = STRUCT([T([1,2])([.5,1.7]),windows])
 	walls = DIFFERENCE([walls, windows])
 
-	walls = TEXTURE("images/exterior.jpg")(walls)
+	walls = TEXTURE("images/interior.jpg")(walls)
 
 	return walls
 #end function -----------------------------------------------------------
@@ -97,6 +98,7 @@ def create_floor(filename):
 	floor = SOLIDIFY(STRUCT(points))	
 	floor = S([1,2,3])([scale,scale,scale])(floor)
 	floor = TEXTURE("images/parquet.jpg")(floor)
+	
 
 	return floor
 
@@ -151,21 +153,22 @@ def create_windows(filename):
 
 
 #start function ---------------------------------------------------------
-def ggpl_create_house():
+def ggpl_create_house(path_ext_walls,path_int_walls):
 
 	"""
 	Main function
+	path_ext_walls is the file .lines of external walls
+	path_int_walls is the file .lines of internal walls
 	"""
 
-	ext = create_external_enclosure("lines/ext_walls.lines")
-	intP = create_internal_partitions("lines/int_walls.lines")
-	floor = create_floor("lines/ext_walls.lines")
+	ext = create_external_enclosure(path_ext_walls)
+	intP = create_internal_partitions(path_int_walls)
+	floor = create_floor(path_ext_walls)
+
 	
 	walls = STRUCT([ext,intP])		
 	house = STRUCT([floor, walls])
 
-
-	#VIEW(house)
 	return house
 
 	
@@ -173,5 +176,6 @@ def ggpl_create_house():
 
 
 
+
 #calling main function:
-ggpl_create_house()
+#ggpl_create_house()
