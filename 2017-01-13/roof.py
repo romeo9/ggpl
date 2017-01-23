@@ -73,12 +73,13 @@ def create_roof(verts, cells, alfa, directions):
 
 	points_landing = create_landing(directions,alfa) 
 	landing = MKPOL([points_landing,cells,1])
-	landing = TEXTURE("images/texture02.jpg")(landing)
 	flaps = create_flaps(verts, directions)
-	flaps = TEXTURE("images/texture02.jpg")(flaps)
+	
+	roof = STRUCT([landing, flaps])
+	roof = OFFSET([.4,.4])(roof)
+	roof = TEXTURE("texture/textureroof.jpg")(roof)
 
-	#VIEW(STRUCT([landing, flaps]))
-	return STRUCT([landing, flaps])
+	return roof
 
 #TEST-----------------------------------------------------------------
 

@@ -1,7 +1,10 @@
 from pyplasm import*
 import csv
+import workshop_10 as w
 
-hwall = 3.
+
+
+hwall = w.hwall
 scale = .05
 hwindow = hwall-(hwall/4.)
 dimborder = .4
@@ -26,7 +29,6 @@ def create_external_enclosure(filename):
 	"""
 	pointsRead = readFile(filename)
 	points = []
-	indexs = []
 	temp = 0
 
 	for i in pointsRead:
@@ -37,15 +39,15 @@ def create_external_enclosure(filename):
 	extWall = S([1,2,3])([scale,scale,scale])(extWall)
 	extWall = OFFSET([.2,.2,hwall])(extWall)
 
-	doors = create_doors("lines/doors.lines")
-	#doors = STRUCT([T([1,2])([.42,1.85]),doors])
+	#doors = create_doors("first_house/lines/doors.lines")
+	doors = create_doors("second_house/lines/doors.lines")
 	walls = DIFFERENCE([extWall, doors])
 
-	windows = create_windows("lines/windows.lines")
-	#windows = STRUCT([T([1,2])([.5,1.7]),windows])
+	#windows = create_windows("first_house/lines/windows.lines")
+	windows = create_windows("second_house/lines/windows.lines")
 	walls = DIFFERENCE([walls, windows])
 
-	walls = TEXTURE("images/interior.jpg")(walls)
+	walls = TEXTURE("texture/texturewall.jpg")(walls)
 
 	return walls
 #end function -----------------------------------------------------------
@@ -69,11 +71,12 @@ def create_internal_partitions(filename):
 	intWall = S([1,2,3])([scale,scale,scale])(intWall)
 	intWall = OFFSET([.2,.2,hwall])(intWall)
 
-	doors = create_doors("lines/doors.lines")
-	#doors = STRUCT([doors])
+	#doors = create_doors("first_house/lines/doors.lines")
+	doors = create_doors("second_house/lines/doors.lines")
+
 	walls = DIFFERENCE([intWall, doors])
 
-	walls = TEXTURE("images/interior.jpg")(walls)
+	walls = TEXTURE("texture/texturewall.jpg")(walls)
 
 
 	return walls
@@ -97,7 +100,7 @@ def create_floor(filename):
 
 	floor = SOLIDIFY(STRUCT(points))	
 	floor = S([1,2,3])([scale,scale,scale])(floor)
-	floor = TEXTURE("images/parquet.jpg")(floor)
+	floor = TEXTURE("texture/texturefloor.jpg")(floor)
 	
 
 	return floor
@@ -118,6 +121,7 @@ def create_doors(filename):
 	for i in pointsRead:
 		points.append(POLYLINE([[float(i[0]),float(i[1])],[float(i[2]),float(i[3])]]))
 
+
 	points = STRUCT(points)
 	doors = S([1,2,3])([scale,scale,scale])(points)
 	doors = OFFSET([.01,.4,hwall-(hwall/4.)])(doors)
@@ -133,19 +137,44 @@ def create_windows(filename):
 	Function that creates windows, taking paramether filename.
 	"""
 	pointsRead = readFile(filename)
-	points = []
-	indexs = []
+	xaxis = []
+	yaxis = []
+
 	temp = 0
 
 	for i in pointsRead:
-		points.append(POLYLINE([[float(i[0]),float(i[1])],[float(i[2]),float(i[3])]]))
-
-	points = STRUCT(points)
+		if float(i[1])==float(i[3]): #parallelo asse x
+			xaxis.append(POLYLINE([[float(i[0]),float(i[1])],[float(i[2]),float(i[3])]]))
+		if float(i[0])==float(i[2]): #parallelo asse y
+			yaxis.append(POLYLINE([[float(i[0]),float(i[1])],[float(i[2]),float(i[3])]]))
+		
 	
-	windows = PROD([points, QUOTE([-((hwall/8.)/scale),hwindow/scale])])
-	windows = OFFSET([0.001,5,0.001])(windows)
-	windows = S([1,2,3])([scale,scale,scale])(windows)
-	windows = STRUCT([T(2)(-.01),windows])
+	if(len(yaxis)!=0 and len(xaxis)!=0):
+		yaxis = STRUCT(yaxis)
+		xaxis = STRUCT(xaxis)
+		yaxis = PROD([yaxis, QUOTE([-((hwall/8.)/scale),hwindow/scale])])
+		yaxis = OFFSET([5,.001,.001])(yaxis)
+		xaxis = PROD([xaxis, QUOTE([-((hwall/8.)/scale),hwindow/scale])])
+		xaxis = OFFSET([.001,5,.001])(xaxis)
+
+		windows = STRUCT([xaxis,yaxis])
+		windows = S([1,2,3])([scale,scale,scale])(windows)
+		windows = STRUCT([T(2)(-.01),windows])
+	else:
+		if(len(xaxis)!=0):
+			xaxis = STRUCT(xaxis)
+			xaxis = PROD([xaxis, QUOTE([-((hwall/8.)/scale),hwindow/scale])])
+			xaxis = OFFSET([.001,5,.001])(xaxis)
+			windows = xaxis
+			windows = S([1,2,3])([scale,scale,scale])(windows)
+			windows = STRUCT([T(2)(-.01),windows])
+		if(len(yaxis)!=0):
+			yaxis = STRUCT(yaxis)
+			yaxis = PROD([yaxis, QUOTE([-((hwall/8.)/scale),hwindow/scale])])
+			yaxis = OFFSET([.001,5,.001])(yaxis)
+			windows = yaxis
+			windows = S([1,2,3])([scale,scale,scale])(windows)
+			windows = STRUCT([T(2)(-.01),windows])
 
 	return STRUCT([windows])
 

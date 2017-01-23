@@ -2,7 +2,7 @@ from pyplasm import*
 import roof as r
 import house as h
 import csv,numpy
-from src import workshop_07 as w7
+import stairs as s
 
 """
 - scale interne/esterne
@@ -11,23 +11,14 @@ from src import workshop_07 as w7
 - porte/finestre
 """
 
-scale = .05
-hwall = 3.
+scale = .05 
+hwall= 6
 hdoor = hwall-(hwall/4.)
 hwindow = hwall-(hwall/4.)
 dimborder = .2
-
 alfa = PI/4.
 
-#w9.create_roof(verts, cells, alfa, directions)
 
-
-
-#------create house------
-
-house = h.ggpl_create_house("lines/ext_walls.lines","lines/int_walls.lines")
-
-#VIEW(house)
 
 
 #start function ---------------------------------------------------------
@@ -56,7 +47,7 @@ def hpc_door(dx,dy,dz):
 
 	door = DIFFERENCE([c,STRUCT([c1,c2])])
 
-	door = TEXTURE("images/parquet.jpg")(door)
+	door = TEXTURE("texture/texturefloor.jpg")(door)
 	return door
 
 
@@ -84,7 +75,7 @@ def create_doors(filename):
 
 
 def hpc_window(dx,dy,dz):
-	dimborder = .4
+	dimborder = 1
 
 	c = CUBOID([dx,dy,dz])
 	c1 = CUBOID([(dx-(3*dimborder))/2.,dy,(dz-(3*dimborder))/2.])
@@ -95,8 +86,8 @@ def hpc_window(dx,dy,dz):
 	borders = STRUCT([DIFFERENCE([c,c3])])
 	glasses = STRUCT([T(2)(3*(dy/8.)),CUBOID([dx,dy/4.,dz])])
 
-	borders = TEXTURE("images/parquet.jpg")(borders)
-	glasses = TEXTURE("images/glass.jpg")(glasses)
+	borders = TEXTURE("texture/texturefloor.jpg")(borders)
+	glasses = TEXTURE("texture/textureglass.jpg")(glasses)
 
 
 	window = STRUCT([borders,glasses])
@@ -114,18 +105,29 @@ def create_windows(filename):
 
 
 	for i in reader:
-		print i
 		if(i[1]==i[3]):
 			if(i[2]>i[0]):
-				window = hpc_window(i[2]-i[0],4,hwindow/scale)
+				window = hpc_window(i[2]-i[0],5,hwindow/scale)
 				window = STRUCT([T([1,2,3])([i[0],i[1],((hwall/8.)/scale)]),window])	
 			else:
-				window = hpc_window(i[0]-i[2],4,hwindow/scale)
+				window = hpc_window(i[0]-i[2],5,hwindow/scale)
 				window = STRUCT([T([1,2,3])([i[2],i[1],((hwall/8.)/scale)]),window]) 		
 			
-		else:
-			window = hpc_door(4,i[3]-i[1],hwindow/scale)
-			window = STRUCT([T([1,2,3])([i[0],i[1],((hwall/8.)/scale)]),window])	
+		if(i[0]==i[2]):
+			if(i[3]>i[1]):
+				window = hpc_window(i[3]-i[1],5,hwindow/scale)
+				window = R([1,2])(PI/2.)(window)
+				window = STRUCT([T([1,2,3])([i[0]+5,i[1],((hwall/8.)/scale)]),window])
+				
+			else:
+				window = hpc_window(i[1]-i[3],5,hwindow/scale)
+				window = R([1,2])(PI/2.)(window)
+				window = STRUCT([T([1,2,3])([i[0]+5,i[1],((hwall/8.)/scale)]),window])
+				
+
+				 
+			#window = hpc_window(5,i[3]-i[1],hwindow/scale)
+			#window = STRUCT([T([1,2,3])([i[0],i[1],((hwall/8.)/scale)]),window])	
 		windows.append(window)
 
 	windows = STRUCT(windows)
@@ -134,7 +136,7 @@ def create_windows(filename):
 	return windows
 
 
-def create_ground_floor(path_ext_walls,path_int_walls):
+def create_ground_floor(path_ext_walls,path_int_walls, path_windows, path_doors):
 	ext = h.create_external_enclosure(path_ext_walls)
 	intP = h.create_internal_partitions(path_int_walls)
 	parquet = h.create_floor(path_ext_walls)
@@ -146,27 +148,27 @@ def create_ground_floor(path_ext_walls,path_int_walls):
 	reader = readFile(path_ext_walls)
 	reader = [[float(float(j)) for j in i] for i in reader]
 
-
-	print reader
 	door = STRUCT([T([1,2])([reader[0][1]*scale,reader[0][1]*scale]),door])
 	c = STRUCT([T([1,2])([reader[0][1]*scale,reader[0][1]*scale]),c])
 	
-	floor = DIFFERENCE([ext,c])
-	floor = TEXTURE("images/interior.jpg")(floor)
-	return STRUCT([floor,door,intP, parquet])
+	#floor = DIFFERENCE([ext,c])
+	floor = TEXTURE("texture/texturewall.jpg")(ext)
+
+	doors = create_doors(path_doors)
+	windows = create_windows(path_windows)
+
+	return STRUCT([floor,intP, parquet, doors, windows])
 
 
 
-
-def create_roof(filename):
+def create_roof_first_model(filename):
 	reader = readFile(filename)
 	reader = [[float(float(j)) for j in i] for i in reader]
-	#print reader
+	
 	points = []
 	for i in reader:
 		points.append([i[0],i[1],0])
 	points.append([reader[0][0],reader[0][1]])
-	#print "----------------------------------",points
 	
 	directions = []
 	directions.append([points[0],1])
@@ -182,33 +184,111 @@ def create_roof(filename):
 	directions.append([points[10],4])
 	directions.append([points[11],4])
 
-	print points
 	cells = [[1,2,3],[3,4,5,6,3],[6,7,8,9,3],[9,10,11,3],[3,11,12,1]]
-	#VIEW(r.create_roof(points,cells,alfa,directions))
-
-	#VIEW(POLYLINE(points))
-	#VIEW(r.create_roof(points, cells, alfa, directions))
-	pol = MKPOL([points,cells,1])
-
-	listapunti = UKPOL(pol)
-	#cells = listapunti[1]
-	#print cells
+	
 	roof = r.create_roof(points,cells,alfa,directions)
-	roof = S([1,2,3])([scale+.001,scale+.001,scale+.001])(roof)
+	roof = S([1,2,3])([scale+.001,scale+.001,scale])(roof)
+	return roof
+
+def create_roof_second_model(filename):
+	reader = readFile(filename)
+	reader = [[float(float(j)) for j in i] for i in reader]
+
+	points = []
+	for i in reader:
+		points.append([i[0],i[1],0])
+	points.append([reader[0][0],reader[0][1]])
+
+	cells = [[1,2,3,4]]
+	directions = []
+	directions.append([points[0],1])
+	directions.append([points[1],2])
+	directions.append([points[2],3])
+	directions.append([points[3],4])
+
+	print points
+	roof = r.create_roof(points,cells,alfa,directions)
+	roof = S([1,2,3])([scale+.001,scale+.001,scale])(roof)
+
 	return roof
 
 
+def create_stairs(filename):
+	reader = readFile(filename)
+	reader = [[float(float(j)) for j in i] for i in reader]
+	dx=0
+	dy=0
+	tx = reader[0][0]*scale
+	ty = reader[0][1]*scale
+	for i in reader:
+		if i[1]==i[3]: #parallelo asse x
+			dx = (i[2]-i[0])*scale
+		if i[0]==i[2]: #parallelo asse y
+			dy = (i[3]-i[1])*scale
+	if dx < 0:
+		dx = -dx
+	if dy < 0:
+		dy = -dy
 
-windows = create_windows("lines/windows.lines")
-doors = create_doors("lines/doors.lines")
-floor = STRUCT([house, doors, windows])
-gf = create_ground_floor("lines/ext_walls.lines","lines/int_walls.lines")
-gf = STRUCT([gf,doors,windows])
+	stairs = s.ggpl_straight_stairs(dx,dy,hwall)
+	stairs = R([1,2])(PI)(stairs)
+	stairs = STRUCT([T([1,2])([tx+dx,ty+dy]),stairs])
+
+	stairs = TEXTURE("texture/texturestairs.jpg")(stairs)
+
+	return stairs
+
+def create_int_floor(path_ext_walls,path_int_walls,path_stairs,path_windows,path_doors):
+	ext = h.create_external_enclosure(path_ext_walls)
+	intP = h.create_internal_partitions(path_int_walls)
+	walls = STRUCT([ext, intP])
+	parquet = OFFSET([.1,.1,.1])(h.create_floor(path_ext_walls))
+
+	reader = readFile(path_stairs)
+	reader = [[float(float(j)) for j in i] for i in reader]
+
+	hole = []
+	for i in reader:
+		hole.append(POLYLINE([[i[0],i[1]],[i[2],i[3]]]))
+	hole = SOLIDIFY(STRUCT(hole))
+
+	hole = S([1,2,3])([scale,scale,scale])(hole)
+	hole = OFFSET([.01,.01,.1])(hole)
+	floor = DIFFERENCE([parquet,hole])
+	
+	floor = TEXTURE("texture/texturefloor.jpg")(floor)
+	doors = create_doors(path_doors)
+	windows = create_windows(path_windows)
+
+	intfloor = STRUCT([floor, doors, windows, walls])
+
+	return STRUCT([T(3)(hwall), intfloor])
 
 
+def main():
 
-roof = create_roof("lines/ext_walls.lines")
-VIEW(STRUCT([gf, T(3)(hwall),floor,T(3)(hwall),roof]))
+	#------------First Model --------------------------------------------------
+	#uncomment for execute
+	"""
+	stairs1 = create_stairs("first_house/lines/stairs.lines")
+	stairs2 = STRUCT([T(3)(hwall),stairs1])
+	ground = create_ground_floor("first_house/lines/ext_walls.lines","first_house/lines/int_walls.lines","first_house/lines/windows.lines","first_house/lines/doors.lines")
+	floor1 = create_int_floor("first_house/lines/ext_walls.lines","first_house/lines/int_walls.lines","first_house/lines/stairs.lines","first_house/lines/windows.lines","first_house/lines/doors.lines")
+	floor2 = STRUCT([T(3)(hwall), floor1])
+	roof1 = STRUCT([T(3)(hwall*3),create_roof_first_model("first_house/lines/ext_walls.lines")])
+	VIEW(STRUCT([floor1, stairs1, ground, stairs2, floor2,roof1]))
+	
 
+	"""
+	#------------Second Model --------------------------------------------------
 
+	
+	ground = create_ground_floor("second_house/lines/ext_walls.lines","second_house/lines/int_walls.lines","second_house/lines/windows.lines","second_house/lines/doors.lines")
+	floor1 = create_int_floor("second_house/lines/ext_walls.lines","second_house/lines/int_walls.lines","second_house/lines/stairs.lines","second_house/lines/windows.lines","second_house/lines/doors.lines")
+	stairs1 = create_stairs("second_house/lines/stairs.lines")
+	roof = STRUCT([T(3)(hwall*2),create_roof_second_model("second_house/lines/ext_walls.lines")])
+	VIEW(STRUCT([ground, stairs1, floor1, roof]))
+	
 
+if __name__ == '__main__':
+    main()
