@@ -332,8 +332,9 @@ def main():
 	floor1 = create_floor("second_house/lines/ext_walls.lines","second_house/lines/int_walls.lines","second_house/lines/stairs.lines","second_house/lines/windows.lines","second_house/lines/doors.lines",'i')
 	stairs1 = create_stairs("second_house/lines/stairs.lines")
 	roof = STRUCT([T(3)(hwall*2),create_roof_second_model("second_house/lines/ext_walls.lines")])
-	VIEW(STRUCT([ground, stairs1, floor1, roof]))
+	VIEW(STRUCT([ground, stairs1, floor1]))
 	"""
+	
 #end main -----------------------------------------------------------
 
 	

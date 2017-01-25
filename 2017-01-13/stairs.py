@@ -44,22 +44,17 @@ def ggpl_straight_stairs(dx, dy, dz):
 	#dy=dy*2
 	#dz=dz/2
 
-	yStep = .2	#dimension of single step
+	yStep = .5	#dimension of single step
 	xStep = dx 	#dimension of single step, if you want to make this param editable, you can make xStep=dx
 	
 	nStep = int(dy/yStep)
 	zStep = (float(dz)/float(nStep))
 
 	wall = CUBOID([0.1,dy,dz]) #create walls close to stairs
-
-
-	#stairs = STRUCT([wall,T(1)(0.1),create_straight_stairs(xStep, yStep, zStep, nStep), T(1)(xStep), wall])
 	
-	#box = SKEL_1(BOX([1,2,3])(stairs))
 	stairs = create_straight_stairs(xStep,yStep,zStep,nStep)
-	#VIEW(stairs)
+	
 	return stairs
-	#VIEW(STRUCT([stairs, box]))
 
 #---------end function--------------------------------------------------
 
