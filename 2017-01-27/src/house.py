@@ -34,16 +34,16 @@ def create_external_enclosure(filename,flag,hwall,scale):
 	extWall = OFFSET([.2,.2,hwall])(extWall)
 
 	if(flag == 'first_model'):
-		doors = create_doors("first_house/lines/doors.lines", hwall,scale)
-		windows = create_windows("first_house/lines/windows.lines", hwall,scale)
+		doors = create_doors("src/first_house/lines/doors.lines", hwall,scale)
+		windows = create_windows("src/first_house/lines/windows.lines", hwall,scale)
 
 	if(flag == 'second_model'):
-		doors = create_doors("second_house/lines/doors.lines", hwall,scale)
-		windows = create_windows("second_house/lines/windows.lines", hwall,scale)
+		doors = create_doors("src/second_house/lines/doors.lines", hwall,scale)
+		windows = create_windows("src/second_house/lines/windows.lines", hwall,scale)
 	
 	walls = DIFFERENCE([extWall, doors])
 	walls = DIFFERENCE([walls, windows])
-	walls = TEXTURE("texture/texturewall.jpg")(walls)
+	walls = TEXTURE("src/texture/texturewall.jpg")(walls)
 
 	return walls
 #end function -----------------------------------------------------------
@@ -68,13 +68,13 @@ def create_internal_partitions(filename,flag,hwall,scale):
 	intWall = OFFSET([.2,.2,hwall])(intWall)
 
 	if(flag=='first_model'):
-		doors = create_doors("first_house/lines/doors.lines", hwall,scale)
+		doors = create_doors("src/first_house/lines/doors.lines", hwall,scale)
 
 	if(flag=='second_model'):
-		doors = create_doors("second_house/lines/doors.lines", hwall,scale)
+		doors = create_doors("src/second_house/lines/doors.lines", hwall,scale)
 
 	walls = DIFFERENCE([intWall, doors])
-	walls = TEXTURE("texture/texturewall.jpg")(walls)
+	walls = TEXTURE("src/texture/texturewall.jpg")(walls)
 
 
 	return walls

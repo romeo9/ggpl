@@ -37,7 +37,7 @@ def create_landing(directions,alfa):
 			new_point.append(i[0][0]+30*math.cos(PI/4))
 			new_point.append(i[0][1]-30*math.sin(PI/4))
 			
-		new_point.append(i[0][2]+40*math.sin(alfa))
+		new_point.append(i[0][2]+30*math.sin(alfa))
 		plane_points.append(new_point)
 
 	points = []
@@ -46,7 +46,7 @@ def create_landing(directions,alfa):
 	points.append(plane_points[0])
 	return points
 
-def create_flaps(verts,directions):
+def create_flaps(verts,directions,alfa):
 	#output: hpc with flaps
 
 	points = create_landing(directions,alfa)
@@ -73,16 +73,16 @@ def create_roof(verts, cells, alfa, directions):
 
 	points_landing = create_landing(directions,alfa) 
 	landing = MKPOL([points_landing,cells,1])
-	flaps = create_flaps(verts, directions)
+	flaps = create_flaps(verts, directions,alfa)
 	
 	roof = STRUCT([landing, flaps])
 	roof = OFFSET([.4,.4])(roof)
-	roof = TEXTURE("texture/textureroof.jpg")(roof)
+	roof = TEXTURE("src/texture/textureroof.jpg")(roof)
 
 	return roof
 
 #TEST-----------------------------------------------------------------
-
+"""
 verts = [[0,0,0],[6,0,0],[6,6,0],[3,6,0],[3,3,0],[0,3,0],[0,0,0]]
 cells = [[1,2,5,6],[2,3,4,5]]
 
@@ -98,6 +98,6 @@ verts = [[4.1426775, 115.85808,0], [163.28571, 115.85808,0], [163.28571, 150.723
 
 directions = [[[4.1426775, 115.85808,0], 1], [[163.28571, 115.85808,0], 2], [[163.28571, 150.72321,0], 2], [[220.17113, 150.72321,0], 2], [[220.17113, 262.22619,0], 3], [[163.28571, 262.22619,0], 3], [[163.28571, 293.22024,0], 3], [[96.383926, 293.22024,0], 4], [[96.383926, 252.20982,0], 4], [[37.797618, 252.20982,0], 4], [[37.797618, 178.69345,0], 4], [[4.1577381, 178.69345,0], 4]]
 
-
+"""
 
 #create_roof(verts, cells, alfa, directions)

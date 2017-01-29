@@ -3,22 +3,16 @@ import roof as r
 import house as h
 import csv,numpy
 import stairs as s
+
 """
-N.B. I file house.py, roof.py e stairs.py sono rispettivamente il workshop_08.py, 
-il workshop_09.py, e il workshop_03.py che ho rinominato per comodità 
-
-
-
 - scale interne/esterne
 - struttura spaziale
 - tetto
 - porte/finestre
 """
 
-
-
 #----Variables-----------------------------------------------------
-scale = .05					#Scale factor
+#scale = .05					#Scale factor
 #------------------------------------------------------------------
 
 
@@ -52,14 +46,14 @@ def hpc_door(dx,dy,dz):
 
 	door = DIFFERENCE([c,STRUCT([c1,c2])])
 
-	door = TEXTURE("texture/texturefloor.jpg")(door)
+	door = TEXTURE("src/texture/texturefloor.jpg")(door)
 	return door
 #end function -----------------------------------------------------------
 
 
 
 #start function ---------------------------------------------------------
-def create_doors(filename, hwall):
+def create_doors(filename, hwall,scale):
 	"""
 	Function that create all doors that are in file doors.lines
 	@param filename: name of file, in this example is ../doors.lines
@@ -105,8 +99,8 @@ def hpc_window(dx,dy,dz,hwall):
 	borders = STRUCT([DIFFERENCE([c,c3])])
 	glasses = STRUCT([T(2)(3*(dy/8.)),CUBOID([dx,dy/4.,dz])])
 
-	borders = TEXTURE("texture/texturefloor.jpg")(borders)
-	glasses = TEXTURE("texture/textureglass.jpg")(glasses)
+	borders = TEXTURE("src/texture/texturefloor.jpg")(borders)
+	glasses = TEXTURE("src/texture/textureglass.jpg")(glasses)
 
 
 	window = STRUCT([borders,glasses])
@@ -117,7 +111,7 @@ def hpc_window(dx,dy,dz,hwall):
 
 
 #start function ---------------------------------------------------------
-def create_windows(filename,hwall):
+def create_windows(filename,hwall,scale):
 	"""
 	Function that create all windows that are in file windows.lines
 	@param filename: name of file, in this example is ../windows.lines
@@ -160,7 +154,7 @@ def create_windows(filename,hwall):
 
 
 #start function ---------------------------------------------------------
-def create_roof_first_model(filename):
+def create_roof_first_model(filename,scale):
 	"""
 	Function that create the roof according to first model given.
 	"""
@@ -197,7 +191,7 @@ def create_roof_first_model(filename):
 
 
 #start function ---------------------------------------------------------
-def create_roof_second_model(filename):
+def create_roof_second_model(filename,scale):
 	"""
 	Function that create the roof according to second model given.
 	"""
@@ -217,7 +211,6 @@ def create_roof_second_model(filename):
 	directions.append([points[2],3])
 	directions.append([points[3],4])
 
-	print points
 	roof = r.create_roof(points,cells,alfa,directions)
 	roof = S([1,2,3])([scale+.001,scale+.001,scale])(roof)
 
@@ -226,7 +219,7 @@ def create_roof_second_model(filename):
 
 
 #start function ---------------------------------------------------------
-def create_stairs(filename, hwall):
+def create_stairs(filename, hwall,scale):
 	"""
 	Function that create stairs according to .lines given by param.
 	Between stairs.lines this function can takes x,y,z dimensions of the stairs and
@@ -252,7 +245,7 @@ def create_stairs(filename, hwall):
 	stairs = R([1,2])(PI)(stairs)
 	stairs = STRUCT([T([1,2])([tx+dx,ty+dy]),stairs])
 
-	stairs = TEXTURE("texture/texturestairs.jpg")(stairs)
+	stairs = TEXTURE("src/texture/texturestairs.jpg")(stairs)
 
 	return stairs
 #end function -----------------------------------------------------------
@@ -260,7 +253,7 @@ def create_stairs(filename, hwall):
 
 
 #start function ---------------------------------------------------------
-def create_int_floor(walls,parquet,path_stairs):
+def create_int_floor(walls,parquet,path_stairs,scale):
 	"""
 	Function that create intermediate floor. This kind of floor has a hole in the flooring
 	because of the stairs.
@@ -279,7 +272,7 @@ def create_int_floor(walls,parquet,path_stairs):
 	hole = OFFSET([.01,.01,.1])(hole)
 	floor = DIFFERENCE([parquet,hole])
 	
-	floor = TEXTURE("texture/texturefloor.jpg")(floor)
+	floor = TEXTURE("src/texture/texturefloor.jpg")(floor)
 	intfloor = STRUCT([floor, walls])
 
 	return intfloor
@@ -297,23 +290,29 @@ def create_floor(path_ext_walls,path_int_walls,path_stairs,path_windows,path_doo
 	int_walls = h.create_internal_partitions(path_int_walls,flagmodel,hwall,scale)
 	walls = STRUCT([ext_walls, int_walls])
 	parquet = OFFSET([.1,.1,.1])(h.create_floor(path_ext_walls,scale))
-	doors = create_doors(path_doors,hwall)
-	windows = create_windows(path_windows,hwall)
+	doors = create_doors(path_doors,hwall,scale)
+	windows = create_windows(path_windows,hwall,scale)
+
+	walls = TEXTURE("src/texture/muri.jpg")(walls)
 
 	if flag=='i':
-		floor = create_int_floor(walls,parquet,path_stairs) 
+		floor = create_int_floor(walls,parquet,path_stairs,scale) 
 		floor = STRUCT([floor, windows, doors])
 		return STRUCT([T(3)(hwall),floor])
 	if flag=='g':
-		parquet = TEXTURE("texture/texturefloor.jpg")(parquet)
-		walls = TEXTURE("texture/texturewall.jpg")(walls)
+		parquet = TEXTURE("src/texture/texturefloor.jpg")(parquet)
+		
 		return STRUCT([walls,parquet, windows, doors])
+
+
 
 #end function -----------------------------------------------------------
 
 
-def create_first_model(hwall,scale):
-	path_to_first_model = "first_house/lines/"
+def create_first_model():
+	hwall = 3.
+	scale = .05
+	path_to_first_model = "src/first_house/lines/"
 	file_ext_walls = path_to_first_model + "ext_walls.lines"
 	file_int_walls = path_to_first_model + "int_walls.lines"
 	file_stairs = path_to_first_model + "stairs.lines"
@@ -321,16 +320,18 @@ def create_first_model(hwall,scale):
 	file_windows = path_to_first_model + "windows.lines"
 
 
-	stairs1 = create_stairs(file_stairs, hwall)
+	stairs1 = create_stairs(file_stairs, hwall,scale)
 	stairs2 = STRUCT([T(3)(hwall),stairs1])
 	ground = create_floor(file_ext_walls,file_int_walls,file_stairs,file_windows,file_doors,'g','first_model',hwall,scale)
 	floor1 = create_floor(file_ext_walls,file_int_walls,file_stairs,file_windows,file_doors,'i','first_model',hwall,scale)
-	floor2 = STRUCT([T(3)(hwall), floor1])
-	roof1 = STRUCT([T(3)(hwall*3),create_roof_first_model(file_ext_walls)])
-	VIEW(STRUCT([floor1, stairs1, ground, stairs2, floor2,roof1]))
+	
+	roof1 = STRUCT([T(3)(hwall*2),create_roof_first_model(file_ext_walls,scale)])
+	return STRUCT([floor1, stairs1, ground, stairs2,roof1])
 
-def create_second_model(hwall,scale):
-	path_to_second_model = "second_house/lines/"
+def create_second_model():
+	hwall = 6.
+	scale = .05
+	path_to_second_model = "src/second_house/lines/"
 	file_ext_walls = path_to_second_model + "ext_walls.lines"
 	file_int_walls = path_to_second_model + "int_walls.lines"
 	file_stairs = path_to_second_model + "stairs.lines"
@@ -339,25 +340,6 @@ def create_second_model(hwall,scale):
 
 	ground = create_floor(file_ext_walls,file_int_walls,file_stairs,file_windows,file_doors,'g','second_model',hwall,scale)
 	floor1 = create_floor(file_ext_walls,file_int_walls,file_stairs,file_windows,file_doors,'i','second_model',hwall,scale)
-	stairs1 = create_stairs(file_stairs, hwall)
-	roof = STRUCT([T(3)(hwall*2),create_roof_second_model(file_ext_walls)])
-	VIEW(STRUCT([ground, stairs1, roof,floor1]))
-
-
-
-#start main ---------------------------------------------------------
-def main():
-	
-	#First Model
-	create_first_model(3.,.05)
-
-	#Second Model
-	#create_second_model(6.,.05)
-	
-#end main -----------------------------------------------------------
-
-	
-
-if __name__ == '__main__':
-	main()
-
+	stairs1 = create_stairs(file_stairs, hwall,scale)
+	roof = STRUCT([T(3)(hwall*2),create_roof_second_model(file_ext_walls,scale)])
+	return STRUCT([ground, stairs1, roof,floor1])
